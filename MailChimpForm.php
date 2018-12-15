@@ -38,12 +38,12 @@ class MailChimpForm
 
     function mailchimp_form_mailchimp_connect() {
         if (check_ajax_referer('mailchimp_connect', 'smf_s')) {
-            $data['firstname']    = $_POST['smf_name'];
-            $data['lastname']    = '';
-            $data['phone']    = $_POST['smf_phone'];
-            $data['email']    = $_POST['smf_email'];
-            $data['status'] = 'subscribed';
-            $response = $this->syncMailchimp($data);
+            $data['firstname'] = $_POST['smf_name'];
+            $data['lastname']  = '';
+            $data['phone']     = $_POST['smf_phone'];
+            $data['email']     = $_POST['smf_email'];
+            $data['status']    = 'subscribed';
+            $response          = $this->syncMailchimp($data);
 
             echo $response;
             die();
@@ -55,17 +55,17 @@ class MailChimpForm
         $apiKey = $this->options['api_key'];
         $listId = $this->options['list_id'];
 
-        $memberId = md5(strtolower($data['email']));
-        $dataCenter = substr($apiKey,strpos($apiKey,'-')+1);
-        $url = 'https://' . $dataCenter . '.api.mailchimp.com/3.0/lists/' . $listId . '/members/' . $memberId;
+        $memberId   = md5(strtolower($data['email']));
+        $dataCenter = substr($apiKey, strpos($apiKey, '-') + 1);
+        $url        = 'https://' . $dataCenter . '.api.mailchimp.com/3.0/lists/' . $listId . '/members/' . $memberId;
 
         $json = json_encode([
             'email_address' => $data['email'],
             'status'        => $data['status'], // "subscribed","unsubscribed","cleaned","pending"
             'merge_fields'  => [
-                'FNAME'     => $data['firstname'],
-                'LNAME'     => $data['lastname'],
-                'PHONE'     => $data['phone']
+                'FNAME' => $data['firstname'],
+                'LNAME' => $data['lastname'],
+                'PHONE' => $data['phone']
             ]
         ]);
 
@@ -79,7 +79,7 @@ class MailChimpForm
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
 
-        $result = curl_exec($ch);
+        $result   = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
@@ -126,11 +126,12 @@ class MailChimpForm
         $email_placeholder = $atts['email_placeholder'];
         $submit_text       = $atts['submit_text'];
 
-        $nonce = wp_create_nonce('mailchimp_connect');
-        $loader = plugin_dir_url(__FILE__).'assets/public/img/ajax-loader.gif';
+        $nonce  = wp_create_nonce('mailchimp_connect');
+        $loader = plugin_dir_url(__FILE__) . 'assets/public/img/ajax-loader.gif';
 
 
         $mailchimp_form = <<<EOD
+<div class="smf-container">
 <div class="mailchimp_form_wrap">
     <div class="error-message"></div>
     <div class="success-message"><h3></h3></div>
@@ -154,6 +155,7 @@ class MailChimpForm
             <button id="mailchimp-submit" type="submit">{$submit_text}</button>
         </div>
     </form>
+</div>
 </div>
 EOD;
 
