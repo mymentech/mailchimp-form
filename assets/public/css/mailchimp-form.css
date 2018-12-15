@@ -82,13 +82,25 @@
 CSS for mobile devices
  */
 @media (max-width: 576px) {
+    .mailchimp_form_wrap {
+        width: 100% !important;
+        font-size: 18px !important;
+        padding: 5px !important;
+    }
     .mailchimp_form_wrap .mailchim_row {
         width: 100%;
         display: block;
     }
 
+    .mailchimp_form_wrap .input_container{
+        margin: 5px;
+    }
     .mailchimp_form_wrap input{
         margin-bottom: 10px;
+    }
+    button#mailchimp-submit {
+        margin: 0 5px;
+        width: 94%;
     }
 
 }
